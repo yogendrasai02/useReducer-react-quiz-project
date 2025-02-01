@@ -15,6 +15,11 @@ const reducer = (state, action) => {
         questions: action.payload,
         quizStatus: "READY",
       };
+    case "DATA_ERROR":
+      return {
+        ...state,
+        quizStatus: "ERROR",
+      };
     default:
       throw new Error("Unknown action type");
   }
@@ -32,7 +37,13 @@ export default function App() {
           payload: data,
         });
       })
-      .catch((err) => console.error("Error fetching questions:", err));
+      .catch((err) => {
+        console.error("Error fetching questions:", err);
+        dispatch({
+          type: "DATA_ERROR",
+          payload: err,
+        });
+      });
   }, []);
 
   return (
