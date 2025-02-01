@@ -4,10 +4,11 @@ import Main from "./Main";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Question from "./Question";
 
 const initialState = {
   questions: [],
-  quizStatus: "LOADING",
+  quizStatus: "LOADING", // LOADING, ERROR, READY, ACTIVE, FINISHED
 };
 
 const reducer = (state, action) => {
@@ -22,6 +23,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         quizStatus: "ERROR",
+      };
+    case "START_QUIZ":
+      return {
+        ...state,
+        quizStatus: "ACTIVE",
       };
     default:
       throw new Error("Unknown action type");
@@ -62,8 +68,9 @@ export default function App() {
         {quizStatus === "LOADING" && <Loader />}
         {quizStatus === "ERROR" && <Error />}
         {quizStatus === "READY" && (
-          <StartScreen questionsCount={questionsCount} />
+          <StartScreen questionsCount={questionsCount} dispatch={dispatch} />
         )}
+        {quizStatus === "ACTIVE" && <Question />}
       </Main>
     </div>
   );
