@@ -1,6 +1,9 @@
 import { useEffect, useReducer } from "react";
 import Header from "./Header";
 import Main from "./Main";
+import Loader from "./Loader";
+import Error from "./Error";
+import StartScreen from "./StartScreen";
 
 const initialState = {
   questions: [],
@@ -26,7 +29,13 @@ const reducer = (state, action) => {
 };
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, quizStatus }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+
+  // derived state
+  const questionsCount = questions.length || 0;
 
   useEffect(() => {
     fetch("http://localhost:8000/questions")
@@ -50,8 +59,11 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        <p>1/15</p>
-        <p>Question goes here</p>
+        {quizStatus === "LOADING" && <Loader />}
+        {quizStatus === "ERROR" && <Error />}
+        {quizStatus === "READY" && (
+          <StartScreen questionsCount={questionsCount} />
+        )}
       </Main>
     </div>
   );
