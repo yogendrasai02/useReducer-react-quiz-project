@@ -10,6 +10,7 @@ const initialState = {
   questions: [],
   quizStatus: "LOADING", // LOADING, ERROR, READY, ACTIVE, FINISHED
   activeQuestionIndex: 0,
+  chosenOptionIndex: null, // tracks the selection option's index for the current question displayed
 };
 
 const reducer = (state, action) => {
@@ -30,16 +31,21 @@ const reducer = (state, action) => {
         ...state,
         quizStatus: "ACTIVE",
       };
+    case "ANSWER_QUESTION":
+      return {
+        ...state,
+        chosenOptionIndex: action.payload,
+      };
     default:
       throw new Error("Unknown action type");
   }
 };
 
 export default function App() {
-  const [{ questions, quizStatus, activeQuestionIndex }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [
+    { questions, quizStatus, activeQuestionIndex, chosenOptionIndex },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   // derived state
   const questionsCount = questions.length || 0;
@@ -72,7 +78,11 @@ export default function App() {
           <StartScreen questionsCount={questionsCount} dispatch={dispatch} />
         )}
         {quizStatus === "ACTIVE" && (
-          <Question question={questions[activeQuestionIndex]} />
+          <Question
+            question={questions[activeQuestionIndex]}
+            dispatch={dispatch}
+            chosenOptionIndex={chosenOptionIndex}
+          />
         )}
       </Main>
     </div>
