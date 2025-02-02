@@ -15,6 +15,7 @@ const initialState = {
   activeQuestionIndex: 0,
   chosenOptionIndex: null, // tracks the selection option's index for the current question displayed
   points: 0,
+  highScore: 0,
 };
 
 const reducer = (state, action) => {
@@ -53,6 +54,7 @@ const reducer = (state, action) => {
     case "FINISH_QUIZ":
       return {
         ...state,
+        highScore: Math.max(state.points, state.highScore),
         quizStatus: "FINISHED",
       };
     default:
@@ -62,7 +64,14 @@ const reducer = (state, action) => {
 
 export default function App() {
   const [
-    { questions, quizStatus, activeQuestionIndex, chosenOptionIndex, points },
+    {
+      questions,
+      quizStatus,
+      activeQuestionIndex,
+      chosenOptionIndex,
+      points,
+      highScore,
+    },
     dispatch,
   ] = useReducer(reducer, initialState);
 
@@ -127,6 +136,7 @@ export default function App() {
           <FinishedScreen
             points={points}
             maxPossiblePoints={maxPossiblePoints}
+            highScore={highScore}
           />
         )}
       </Main>
