@@ -7,6 +7,7 @@ import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
+import FinishedScreen from "./components/FinishedScreen";
 
 const initialState = {
   questions: [],
@@ -48,6 +49,11 @@ const reducer = (state, action) => {
         ...state,
         activeQuestionIndex: state.activeQuestionIndex + 1,
         chosenOptionIndex: null,
+      };
+    case "FINISH_QUIZ":
+      return {
+        ...state,
+        quizStatus: "FINISHED",
       };
     default:
       throw new Error("Unknown action type");
@@ -112,8 +118,16 @@ export default function App() {
             <NextButton
               dispatch={dispatch}
               chosenOptionIndex={chosenOptionIndex}
+              activeQuestionIndex={activeQuestionIndex}
+              questionsCount={questionsCount}
             />
           </>
+        )}
+        {quizStatus === "FINISHED" && (
+          <FinishedScreen
+            points={points}
+            maxPossiblePoints={maxPossiblePoints}
+          />
         )}
       </Main>
     </div>
