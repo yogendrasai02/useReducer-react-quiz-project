@@ -11,6 +11,7 @@ const initialState = {
   quizStatus: "LOADING", // LOADING, ERROR, READY, ACTIVE, FINISHED
   activeQuestionIndex: 0,
   chosenOptionIndex: null, // tracks the selection option's index for the current question displayed
+  points: 0,
 };
 
 const reducer = (state, action) => {
@@ -32,9 +33,13 @@ const reducer = (state, action) => {
         quizStatus: "ACTIVE",
       };
     case "ANSWER_QUESTION":
+      const question = state.questions[state.activeQuestionIndex];
       return {
         ...state,
         chosenOptionIndex: action.payload,
+        points:
+          state.points +
+          (question.correctOption === action.payload ? question.points : 0),
       };
     default:
       throw new Error("Unknown action type");
