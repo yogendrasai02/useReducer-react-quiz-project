@@ -8,6 +8,8 @@ import Question from "./components/Question";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
 import FinishedScreen from "./components/FinishedScreen";
+import Footer from "./components/Footer";
+import Timer from "./components/Timer";
 
 const initialState = {
   questions: [],
@@ -16,6 +18,7 @@ const initialState = {
   chosenOptionIndex: null, // tracks the selection option's index for the current question displayed
   points: 0,
   highScore: 0,
+  secondsRemaining: 10, // timer
 };
 
 const reducer = (state, action) => {
@@ -62,6 +65,13 @@ const reducer = (state, action) => {
         ...initialState,
         highScore: state.highScore,
       };
+    case "CLOCK_TICK":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        quizStatus:
+          state.secondsRemaining === 0 ? "FINISHED" : state.quizStatus,
+      };
     default:
       throw new Error("Unknown action type");
   }
@@ -76,6 +86,7 @@ export default function App() {
       chosenOptionIndex,
       points,
       highScore,
+      secondsRemaining,
     },
     dispatch,
   ] = useReducer(reducer, initialState);
@@ -131,12 +142,15 @@ export default function App() {
               dispatch={dispatch}
               chosenOptionIndex={chosenOptionIndex}
             />
-            <NextButton
-              dispatch={dispatch}
-              chosenOptionIndex={chosenOptionIndex}
-              activeQuestionIndex={activeQuestionIndex}
-              questionsCount={questionsCount}
-            />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                dispatch={dispatch}
+                chosenOptionIndex={chosenOptionIndex}
+                activeQuestionIndex={activeQuestionIndex}
+                questionsCount={questionsCount}
+              />
+            </Footer>
           </>
         )}
         {quizStatus === "FINISHED" && (
