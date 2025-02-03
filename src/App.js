@@ -57,6 +57,11 @@ const reducer = (state, action) => {
         highScore: Math.max(state.points, state.highScore),
         quizStatus: "FINISHED",
       };
+    case "RESTART_QUIZ":
+      return {
+        ...initialState,
+        highScore: state.highScore,
+      };
     default:
       throw new Error("Unknown action type");
   }
@@ -84,22 +89,24 @@ export default function App() {
   );
 
   useEffect(() => {
-    fetch("http://localhost:8000/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch({
-          type: "DATA_RECEIVED",
-          payload: data,
+    if (quizStatus === "LOADING") {
+      fetch("http://localhost:8000/questions")
+        .then((res) => res.json())
+        .then((data) => {
+          dispatch({
+            type: "DATA_RECEIVED",
+            payload: data,
+          });
+        })
+        .catch((err) => {
+          console.error("Error fetching questions:", err);
+          dispatch({
+            type: "DATA_ERROR",
+            payload: err,
+          });
         });
-      })
-      .catch((err) => {
-        console.error("Error fetching questions:", err);
-        dispatch({
-          type: "DATA_ERROR",
-          payload: err,
-        });
-      });
-  }, []);
+    }
+  }, [quizStatus]);
 
   return (
     <div className="app">
@@ -137,6 +144,7 @@ export default function App() {
             points={points}
             maxPossiblePoints={maxPossiblePoints}
             highScore={highScore}
+            dispatch={dispatch}
           />
         )}
       </Main>
