@@ -18,8 +18,10 @@ const initialState = {
   chosenOptionIndex: null, // tracks the selection option's index for the current question displayed
   points: 0,
   highScore: 0,
-  secondsRemaining: 10, // timer
+  secondsRemaining: null, // timer, calculated based on number of questions, at the start of the quiz
 };
+
+const SECONDS_PER_QUESTION = 30;
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -38,6 +40,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         quizStatus: "ACTIVE",
+        secondsRemaining: state.questions.length * SECONDS_PER_QUESTION,
       };
     case "ANSWER_QUESTION":
       const question = state.questions[state.activeQuestionIndex];
