@@ -12,3 +12,5 @@ The quiz app was developed focusing on the `useReducer` hook with the below conc
 `project-1-... , project-2-... , project-3-....` depict the branches in order.<br>
 
 **Credits:** https://www.udemy.com/course/the-ultimate-react-course/
+
+Link to codesandbox for the bank account challenge: https://codesandbox.io/p/sandbox/challenge-bank-account-usereducer-hook-k9kgsc
